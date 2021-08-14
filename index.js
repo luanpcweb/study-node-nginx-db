@@ -9,8 +9,8 @@ const config = {
 };
 
 // create table people(id int not null auto_increment, name varchar(255), primary key(id));
-
 const mysql = require('mysql')
+
 const connection = mysql.createConnection(config)
 const sqlCreate = `CREATE TABLE IF NOT EXISTS people(id int not null auto_increment, name varchar(255), primary key(id));`
 connection.query(sqlCreate)
@@ -19,27 +19,31 @@ connection.end()
 
 app.get('/', (req, res) => {
 
-    const connection = mysql.createConnection(config)
+    const conn = mysql.createConnection(config)
     const sql = `INSERT INTO people(name) values ('Luan')`
-    connection.query(sql)
+    conn.query(sql)
+    conn.end()
 
-    var values = '<h1>Teste</h1>';
-    connection.connect(function(err) {
+    const conn1 = mysql.createConnection(config)
+    var values = '<h1>Full Cycle Rocks!</h1>';
+    
+    conn1.connect(function(err) {
         if (err) throw err;
-        // if connection is successful
-        con.query("SELECT * FROM students", function (err, result, fields) {
-          // if any error while executing above query, throw error
+        
+        conn1.query("SELECT * FROM people", function (err, result, fields) {
+          
           if (err) throw err;
-          // if there is no error, you have the result
-          console.log(result);
-          Object.keys(result).forEach(function(key) {
-             values += '- ' + result[key] + '<br>';
-          });
-        });
-    });
 
-    connection.end()
-    res.send(values)
+          Object.keys(result).forEach(function(key) {
+                console.log(result[key].name);
+                values += '- ' + result[key].name + ' <br>';
+          });
+          
+          res.send(values)
+
+        });
+      });
+   
 })
 
 app.listen(port, () => {

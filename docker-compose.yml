@@ -4,15 +4,11 @@ services:
   app:
       build:
           context: .
-      entrypoint: dockerize -wait tcp://db:3306 -timeout 20s node index.js
+      entrypoint: dockerize -wait tcp://db:3306 -timeout 120s node index.js
       networks: 
           - node-network
-      # volumes: 
-      #     - ./node:/usr/src/app
       tty: true
       container_name: app
-      # ports: 
-      #     - 3000:3000
       depends_on: 
             - db
   nginx:
